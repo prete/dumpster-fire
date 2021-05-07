@@ -20,7 +20,8 @@ jobs:
     
     # The image to use for rendering the course
     container:
-      image: quay.io/cellgeni/scrna-seq-course:v5.11
+      image: jupyter/minimal-notebook:latest
+      options: --user root
 
     # Steps to render and upload the course
     steps:
