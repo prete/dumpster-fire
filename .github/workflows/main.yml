@@ -3,6 +3,7 @@ name: Build scRNAseq-course
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
 
