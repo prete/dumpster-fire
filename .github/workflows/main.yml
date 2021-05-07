@@ -10,10 +10,13 @@ jobs:
   download-cache:
     name: Retrieve bookdown cache from S3
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
+      - name: Configure S3 credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-endpoint-url: https://cog.sanger.ac.uk
       - name: Download cache
         run:  aws s3 sync s3://mp33/course/_bookdown_files/ . --endpoint-url https://cog.sanger.ac.uk
       - uses: actions/upload-artifact@v2
@@ -28,8 +31,14 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
+      - name: Configure S3 credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-endpoint-url: https://cog.sanger.ac.uk
       - name: Download course data
-        run: aws s3 sync s3://mp33/course/data/ . --endpoint-url https://cog.sanger.ac.uk
+        run: aws s3 sync s3://mp33/course/data/ .
       - uses: actions/upload-artifact@v2
         with:
           name: course-data
