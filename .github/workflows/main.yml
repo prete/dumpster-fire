@@ -14,9 +14,10 @@ jobs:
       - name: Configure S3 credentials
         run: |
           mkdir -p ~/.aws
-          echo "[default]" > ~/.aws/credentials
-          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
-          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "[default]" > ~/.aws/config
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/config
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/config
+          echo "region=other-v2-signature" >> ~/.aws/config
       - name: Download cache
         run:  aws s3 sync s3://mp33/course/_bookdown_files/ . --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - uses: actions/upload-artifact@v2
@@ -27,18 +28,19 @@ jobs:
   download-data:
     name: Retrieve data from S3
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
+#    env:
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#      AWS_REGION: ${{ secrets.AWS_REGION }}
+#      AWS_S3_ENDPOINT: ${{ secrets.AWS_S3_ENDPOINT }}
     steps:
       - name: Configure S3 credentials
         run: |
           mkdir -p ~/.aws
-          echo "[default]" > ~/.aws/credentials
-          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
-          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "[default]" > ~/.aws/config
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/config
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/config
+          echo "region=other-v2-signature" >> ~/.aws/config
       - name: Download course data
         run: aws s3 sync s3://mp33/course/data/ . --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - uses: actions/upload-artifact@v2
