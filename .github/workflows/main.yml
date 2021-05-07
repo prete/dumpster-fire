@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Show1
-        run : ls -l ${WORK_DIR}
+        run : ls ${WORK_DIR}
       - name: Copy course files
         run : cp -r ${WORK_DIR}/code/course_files/*  -r ${WORK_DIR}
       - name: Retrieve course data from S3
