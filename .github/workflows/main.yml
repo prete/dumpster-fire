@@ -19,13 +19,17 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: other-v2-signature
-      WORK_DIR: ${GITHUB_WORKSPACE}
+#      WORK_DIR: ${GITHUB_WORKSPACE}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Show1
-        run : ls ${WORK_DIR}
+        run : echo $GITHUB_WORKSPACE
+      - name: Show2
+        run : echo "$GITHUB_WORKSPACE"
+      - name: Show3
+        run : ls $GITHUB_WORKSPACE
 #      - name: Copy course files
 #        run : cp -r ${WORK_DIR}/course_files/*  -r ${WORK_DIR}
       - name: Retrieve course data from S3
