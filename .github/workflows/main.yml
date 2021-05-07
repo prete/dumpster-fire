@@ -7,65 +7,34 @@ on:
 
 jobs:
 
-  download-cache:
-    name: Retrieve bookdown cache from S3
+  build-course:  
+    name: Build scRNAseq-course
+    
     runs-on: ubuntu-latest
-    steps:
-      - name: Configure S3 credentials
-        run: |
-          mkdir -p ~/.aws
-          echo "[default]" > ~/.aws/config
-          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/config
-          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/config
-          echo "region=other-v2-signature" >> ~/.aws/config
-      - name: Download cache
-        run:  aws s3 sync s3://mp33/course/_bookdown_files/ . --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: bookdown-cache
-          path: ./
-
-  download-data:
-    name: Retrieve data from S3
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download course data
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: other-v2-signature
-        run: aws s3 sync s3://mp33/course/data/ . --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: course-data
-          path: ./
-          if-no-files-found: error 
-
-  render-course:
-    name: Render bookdown Rmd files for site generation
-    runs-on: ubuntu-latest
-    needs: [download-cache, download-data]
     container:
       image: jupyter/minimal-notebook:latest
       options: --user root
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-      - run: ls -lha 
 
-  upload-course:
-    name: Upload rendered bookdown files to S3
-    runs-on: ubuntu-latest
-    needs: [render-course]
-    steps:
-      - uses: actions/download-artifact@v2
-      - run: ls -lha .
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: other-v2-signature
 
-  upload-cache:
-    name: Upload bookdown cache to S3
-    runs-on: ubuntu-latest
-    needs: [render-course]
     steps:
-      - uses: actions/download-artifact@v2
-      - run: ls -lha .
+      - name: Retrieve data from S3
+        run: |
+          mkdir data
+          aws s3 sync s3://mp33/course/data/ ./data --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+      - name: Retrieve bookdown cache from S3
+        run: |
+          mkdir _bookdown_files
+          aws s3 sync s3://mp33/course/_bookdown_files/ ./_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Render bookdown Rmd files for site generation
+        run: echo "Rscript -e bookdown::render_book('index.html', 'bookdown::gitbook')"
+        #run: Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
+      - name: Upload rendered bookdown files to S3
+        run: aws s3 sync website  ./website s3://mp33/course/website/
+      - name: Upload bookdown cache to S3
+        run: aws s3 sync ./_bookdown_files s3://mp33/course/_bookdown_files/ .
