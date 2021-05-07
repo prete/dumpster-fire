@@ -23,20 +23,20 @@ jobs:
     steps:
       - name: Retrieve data from S3
         run: |
-          mkdir data
-          aws s3 sync s3://mp33/course/data/ ./data --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+          mkdir -p /github/home/data
+          aws s3 sync s3://mp33/course/data/ /github/home/data --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - name: Retrieve bookdown cache from S3
         run: |
-          mkdir _bookdown_files
-          aws s3 sync s3://mp33/course/_bookdown_files/ ./_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+          mkdir -p /github/home/_bookdown_files
+          aws s3 sync s3://mp33/course/_bookdown_files/ /github/home/_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Render bookdown Rmd files for site generation
         run: echo "Rscript -e bookdown::render_book('index.html', 'bookdown::gitbook')"
       - name: Show
-        run: ls -lh
+        run: ls -lh /github/home/
         #run: Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
       - name: Upload rendered bookdown files to S3
-        run: aws s3 sync website  ./website s3://mp33/course/website/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+        run: aws s3 sync website /github/home s3://mp33/course/github_home/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - name: Upload bookdown cache to S3
-        run: aws s3 sync ./_bookdown_files s3://mp33/course/_bookdown_files/ .  --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+        run: aws s3 sync .//github/home/_bookdown_files s3://mp33/course/_bookdown_files/ .  --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
