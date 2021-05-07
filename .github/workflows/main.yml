@@ -14,7 +14,11 @@ jobs:
       - name: Configure S3 credentials
         run: |
           mkdir -p ~/.aws
-          echo "${{ secrets.AWS_ACCESS_KEY_ID }}:${{ secrets.AWS_SECRET_ACCESS_KEY }}" > ~/.aws/credentials
+          cat ~/.aws/credentials <EOF
+          [default]
+          aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          EOF
       - name: Download cache
         run:  aws s3 sync s3://mp33/course/_bookdown_files/ . --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - uses: actions/upload-artifact@v2
@@ -33,10 +37,13 @@ jobs:
     steps:
       - name: Configure S3 credentials
         run: |
-          mkdir -p /github//home/.aws
-          echo "${{ secrets.AWS_ACCESS_KEY_ID }}:${{ secrets.AWS_SECRET_ACCESS_KEY }}" > /github//home/.aws/credentials
+          cat ~/.aws/credentials <EOF
+          [default]
+          aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          EOF
       - name: Download course data
-        run: aws s3 sync s3://mp33/course/data/ .  --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+        run: aws s3 sync s3://mp33/course/data/ . --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - uses: actions/upload-artifact@v2
         with:
           name: course-data
