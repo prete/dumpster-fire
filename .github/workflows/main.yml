@@ -38,10 +38,8 @@ jobs:
           aws s3 sync s3://mp33/course/_bookdown_files/ $BUILD_DIR/_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - name: Render bookdown Rmd files for site generation
         working-directory: $BUILD_DIR
-        run: |
-          ls -l .
-          echo "Rscript -e bookdown::render_book('index.html', 'bookdown::gitbook')"
+        run: echo "Rscript -e bookdown::render_book('index.html', 'bookdown::gitbook')"
       - name: Upload rendered bookdown files to S3
-        run: aws s3 sync $BUILD_DIR/website s3://mp33/course/website/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+        run: aws s3 sync $BUILD_DIR/course_files s3://mp33/course/website/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
       - name: Upload bookdown cache to S3
         run: aws s3 sync $BUILD_DIR/_bookdown_files s3://mp33/course/github_bookdown_files/ .  --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
