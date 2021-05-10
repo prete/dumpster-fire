@@ -28,7 +28,7 @@ jobs:
       - name: Mount s3 storage
         run: |
           mkdir -p $BUILD_DIR
-          rclone mount s3:/mp33/course/ $BUILD_DIR --daemon --vfs-cache-mode full
+          rclone mount s3:/mp33/course/ $BUILD_DIR --daemon
 
       - name: Checkout repository
         uses: actions/checkout@v2
