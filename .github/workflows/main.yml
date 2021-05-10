@@ -15,16 +15,10 @@ jobs:
       image: quay.io/cellgeni/scrna-seq-course:v5.11
       options: --user root
 
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: other-v2-signature
-      BUILD_DIR: $GITHUB_WORKSPACE/_build
-
     steps:
       - name: Free workspace storage
-        run: df -h $GITHUB_WORKSPACE
+        run: df -h
       - name: Delete stuff
         run: sudo rm -rf /usr/shared/dotnet
       - name: Storage after delete
-        run: df -h $GITHUB_WORKSPACE
+        run: df -h
