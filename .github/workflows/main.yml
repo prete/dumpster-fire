@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/cellgeni/scrna-seq-course:v5.11
-      options: --user root
+      options: --user root --cap-add SYS_ADMIN 
 
     env:
       BUILD_DIR: $GITHUB_WORKSPACE/_build
