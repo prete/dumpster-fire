@@ -17,8 +17,10 @@ jobs:
 
     steps:
       - name: Free workspace storage
-        run: df -h
-      - name: Delete stuff
-        run: sudo rm -rf /usr/shared/dotnet
+        run: df -h /__w
+      - name: List
+        run: ls -lah /__w/*
+#      - name: Delete stuff
+#        run: sudo rm -rf /usr/shared/dotnet
       - name: Storage after delete
         run: df -h
