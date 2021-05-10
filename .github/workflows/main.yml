@@ -27,9 +27,12 @@ jobs:
           endpoint ${{ secrets.AWS_S3_ENDPOINT }}
 
       - name: Mount s3 storage
-        run: |
-          mkdir -p $BUILD_DIR
-          rclone -vv mount s3:/mp33/ "$GITHUB_WORKSPACE" --daemon --allow-other --allow-non-empty --use-mmap --vfs-cache-mode full
+        run: rclone -vv mount s3:/mp33/ "$GITHUB_WORKSPACE" \
+          --daemon \
+          --allow-other \
+          --allow-non-empty \
+          --use-mmap \
+          --vfs-cache-mode full
 
       - name: Wait until storage is ready
         run: ls "$GITHUB_WORKSPACE"
