@@ -11,16 +11,11 @@ jobs:
     name: 🐕
     
     runs-on: ubuntu-latest
-    container:
-      image: quay.io/cellgeni/scrna-seq-course:v5.11
-      options: --user root
 
     steps:
-      - name: Free workspace storage
-        run: df -h /__w
-      - name: List
-        run: ls -lah /__w/*
-#      - name: Delete stuff
-#        run: sudo rm -rf /usr/shared/dotnet
-      - name: Storage after delete
-        run: df -h
+      - name: Install rclone
+        run: curl https://rclone.org/install.sh | sudo bash
+      - name: Configure rclone for s3 
+        run: rclone config create sanger_s3 s3 env_auth false access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} endpoint ${{ secrets.AWS_S3_ENDPOINT }}
+      - name: Works?
+        run: rclone lsd sanger_s3:/mp33/
