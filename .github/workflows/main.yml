@@ -11,12 +11,6 @@ jobs:
     name: 🐕🐕🐕
     
     runs-on: ubuntu-latest
-    container:
-      image: quay.io/cellgeni/scrna-seq-course:v5.11
-      options: --user root --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
-
-    env:
-      BUILD_DIR: $GITHUB_WORKSPACE/_build
 
     steps:
       - name: Checkout repository
@@ -26,19 +20,16 @@ jobs:
         run: curl https://rclone.org/install.sh | sudo bash
 
       - name: Configure rclone for s3 
-        run: rclone config create s3 s3 env_auth false access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} endpoint ${{ secrets.AWS_S3_ENDPOINT }}
+        run: rclone config create s3 s3 \
+          env_auth false \
+          access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} \
+          secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          endpoint ${{ secrets.AWS_S3_ENDPOINT }}
 
       - name: Mount s3 storage
         run: |
           mkdir -p $BUILD_DIR
-          rclone -vv mount s3:/mp33/course/ "$BUILD_DIR" --daemon --allow-other --allow-non-empty --use-mmap --vfs-cache-mode full
+          rclone -vv mount s3:/mp33/ "$GITHUB_WORKSPACE" --daemon --allow-other --allow-non-empty --use-mmap --vfs-cache-mode full
 
       - name: Wait until storage is ready
-        run: ls "$BUILD_DIR"
-
-      - name: Copy course files to build folder
-        run : cp -r $GITHUB_WORKSPACE/course_files/* $BUILD_DIR
-        
-      - name: Render bookdown Rmd files for site generation
-        working-directory: ${{ env.BUILD_DIR }}
-        run: Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
+        run: ls "$GITHUB_WORKSPACE"
