@@ -27,8 +27,8 @@ jobs:
           endpoint ${{ secrets.AWS_S3_ENDPOINT }}
 
       - name: Mount s3 storage
-        run: rclone -vv mount s3:/mp33/ "$GITHUB_WORKSPACE" \
-          --daemon \
+        run: rclone -vv mount s3:mp33/ $GITHUB_WORKSPACE/  \
+          --daemon 
           --allow-other \
           --allow-non-empty \
           --use-mmap \
