@@ -34,7 +34,7 @@ jobs:
           rclone -vv mount s3:/mp33/course/ "$BUILD_DIR" --daemon --allow-other --allow-non-empty --use-mmap --vfs-cache-mode full
 
       - name: Wait until storage is ready
-        run: until findmnt --mountpoint "$BUILD_DIR" --mtab >/dev/null; do :; done
+        run: ls "$BUILD_DIR"
 
       - name: Copy course files to build folder
         run : cp -r $GITHUB_WORKSPACE/course_files/* $BUILD_DIR
