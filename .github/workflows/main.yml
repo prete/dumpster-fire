@@ -19,6 +19,9 @@ jobs:
       BUILD_DIR: $GITHUB_WORKSPACE/_build
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
       - name: Install rclone
         run: curl https://rclone.org/install.sh | sudo bash
 
@@ -28,11 +31,8 @@ jobs:
       - name: Mount s3 storage
         run: |
           mkdir -p $BUILD_DIR
-          rclone mount s3:/mp33/course/ $BUILD_DIR --daemon
+          rclone mount s3:/mp33/course/ $BUILD_DIR --daemon --allow-other --vfs-cache-mode full
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        
       - name: Copy course files to build folder
         run : cp -r $GITHUB_WORKSPACE/course_files/* $BUILD_DIR
         
