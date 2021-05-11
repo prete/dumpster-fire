@@ -27,5 +27,4 @@ jobs:
       - name: Mount s3 storage and so something
         run: |
           rclone -vv mount s3:mp33 "$GITHUB_WORKSPACE" --debug-fuse --daemon --allow-other --allow-non-empty
-          until findmnt --mountpoint "$GITHUB_WORKSPACE" --mtab >/dev/null; do :; done
           ls "$GITHUB_WORKSPACE"
