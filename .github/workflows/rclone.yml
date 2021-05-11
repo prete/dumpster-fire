@@ -24,9 +24,8 @@ jobs:
           secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} \
           endpoint ${{ secrets.AWS_S3_ENDPOINT }}
 
-      - name: Mount s3 storage
-        run: rclone -vv mount s3:mp33 $GITHUB_WORKSPACE --daemon --allow-other --allow-non-empty
-
-      - run: ls "$GITHUB_WORKSPACE"
-
-      - run: sudo mount
+      - name: Mount s3 storage and so something
+        run: |
+          rclone -vv mount s3:mp33 $GITHUB_WORKSPACE --daemon --allow-other --allow-non-empty
+          until findmnt --mountpoint "$dst" --mtab >/dev/null; do :; done
+          ls "$GITHUB_WORKSPACE"
