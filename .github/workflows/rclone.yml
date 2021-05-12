@@ -1,4 +1,4 @@
-name: 🐻
+name: rclone ls copy
 
 on:
   workflow_dispatch:
