@@ -22,9 +22,8 @@ jobs:
           secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} \
           endpoint ${{ secrets.AWS_S3_ENDPOINT }}
 
-      - name: mount s3 storage and so something
+      - name: mount s3 storage and so something (not working)
         run: |
           mkdir -p "$GITHUB_WORKSPACE/s3"
-          rclone mount s3:mp33 "$GITHUB_WORKSPACE/s3" --daemon --allow-other --allow-non-empty
-          ls "$GITHUB_WORKSPACE/s3"
-          rclone lsf s3:mp33
+          rclone mount s3:mp33 "$GITHUB_WORKSPACE/s3" --allow-other --allow-non-empty &
+          ls -lh "$GITHUB_WORKSPACE/s3"
