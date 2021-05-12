@@ -25,5 +25,5 @@ jobs:
       - name: mount s3 storage and so something (not working)
         run: |
           mkdir -p "$GITHUB_WORKSPACE/s3"
-          rclone mount s3:mp33 "$GITHUB_WORKSPACE/s3" --allow-other --allow-non-empty &
+          rclone mount s3:mp33 "$GITHUB_WORKSPACE/s3" &
           ls -lh "$GITHUB_WORKSPACE/s3"
