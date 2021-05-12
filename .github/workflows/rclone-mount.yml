@@ -1,14 +1,12 @@
 name: 🐻
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
 
   test:  
-    name: 🐕🐕🐕
+    name: rcone mount
     
     runs-on: ubuntu-latest
 
@@ -29,4 +27,4 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/s3"
           rclone mount s3:mp33 "$GITHUB_WORKSPACE/s3" --daemon --allow-other --allow-non-empty
           ls "$GITHUB_WORKSPACE/s3"
-          rclone lsd s3:mp33
+          rclone lsf s3:mp33
