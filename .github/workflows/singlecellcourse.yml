@@ -45,12 +45,15 @@ jobs:
           aws s3 sync s3://mp33/course/_bookdown_files/ $GITHUB_WORKSPACE/_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
           
       - name: Render bookdown Rmd files for site generation
-        working-directory: /course
         run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          mkidr /course
           cp -r $GITHUB_WORKSPACE/course_files/* /course
           rm -rf $GITHUB_WORKSPACE/course_files
           mv $GITHUB_WORKSPACE/_bookdown_files /course
           mv $GITHUB_WORKSPACE/data /course
+          cd /course
           Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
           mv /course/website $GITHUB_WORKSPACE
           mv /course/_bookdown_files $GITHUB_WORKSPACE
