@@ -22,11 +22,6 @@ jobs:
       - name: Disk space report before modification
         shell: bash
         run: |
-          echo "Memory and swap:"
-          free
-          echo
-          swapon --show
-          echo
           echo "Available storage:"
           df -h
           echo
@@ -46,8 +41,14 @@ jobs:
           
       - name: Render bookdown Rmd files for site generation
         run: |
+          echo "Available storage:"
+          df -h
+          echo
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
+          echo "Available storage after removing unnecesary stuff"
+          df -h
+          echo
           mkdir /course
           cp -r $GITHUB_WORKSPACE/course_files/* /course
           rm -rf $GITHUB_WORKSPACE/course_files
@@ -55,6 +56,9 @@ jobs:
           mv $GITHUB_WORKSPACE/data /course
           cd /course
           Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
+          echo "Available storage:"
+          df -h
+          echo
           mv /course/website $GITHUB_WORKSPACE
           mv /course/_bookdown_files $GITHUB_WORKSPACE
         
