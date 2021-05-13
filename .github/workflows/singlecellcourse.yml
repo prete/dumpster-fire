@@ -48,7 +48,7 @@ jobs:
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
-          mkidr /course
+          mkdir /course
           cp -r $GITHUB_WORKSPACE/course_files/* /course
           rm -rf $GITHUB_WORKSPACE/course_files
           mv $GITHUB_WORKSPACE/_bookdown_files /course
