@@ -8,7 +8,7 @@ jobs:
   build-course:  
     name: Build scRNAseq-course
     
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container:
       image: quay.io/cellgeni/scrna-seq-course:v5.11
       options: --user root
@@ -17,54 +17,39 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: other-v2-signature
+      BUILD_DIR: $GITHUB_WORKSPACE/build
 
-    steps:      
-      - name: Disk space report before modification
-        shell: bash
-        run: |
-          echo "Available storage:"
-          df -h
-          echo
+    steps:     
+      - name: Clean workspace before start
+        run: rm -rf $GITHUB_WORKSPACE/*
 
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Retrieve course data from S3
+      - name: Create build folders
         run: |
-          mkdir -p $GITHUB_WORKSPACE/data
-          aws s3 sync s3://mp33/course/data/ $GITHUB_WORKSPACE/data --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+          mkdir -p $BUILD_DIR
+          mkdir -p $BUILD_DIR/data
+          mkdir -p $BUILD_DIR/_bookdown_files
+          
+      - name: Copy course files to build folder
+        run : cp -r $GITHUB_WORKSPACE/course_files/* $BUILD_DIR
+
+      - name: Retrieve course data from S3
+        run: aws s3 sync s3://mp33/course/data/ $BUILD_DIR/data --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
 
       - name: Retrieve bookdown cache from S3
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/_bookdown_files
-          aws s3 sync s3://mp33/course/_bookdown_files/ $GITHUB_WORKSPACE/_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+        run: aws s3 sync s3://mp33/course/_bookdown_files/ $BUILD_DIR/_bookdown_files --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
           
       - name: Render bookdown Rmd files for site generation
-        run: |
-          echo "Available storage:"
-          df -h
-          echo
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          echo "Available storage after removing unnecesary stuff"
-          df -h
-          echo
-          mkdir /course
-          cp -r $GITHUB_WORKSPACE/course_files/* /course
-          rm -rf $GITHUB_WORKSPACE/course_files
-          mv $GITHUB_WORKSPACE/_bookdown_files /course
-          mv $GITHUB_WORKSPACE/data /course
-          cd /course
-          Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
-          echo "Available storage:"
-          df -h
-          echo
-          mv /course/website $GITHUB_WORKSPACE
-          mv /course/_bookdown_files $GITHUB_WORKSPACE
+        working-directory: ${{ env.BUILD_DIR }}
+        run: Rscript -e "bookdown::render_book('index.html', 'bookdown::gitbook')"
         
       - name: Upload rendered bookdown files to S3
-        run: aws s3 sync $GITHUB_WORKSPACE/website s3://mp33/course/website/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
+        run: aws s3 sync $BUILD_DIR/website s3://mp33/course/website/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
         
       - name: Upload bookdown cache to S3
         run: aws s3 sync $BUILD_DIR/_bookdown_files s3://mp33/course/_bookdown_files/ --endpoint-url ${{ secrets.AWS_S3_ENDPOINT }}
-        
+
+      - name: Clean workspace after finish
+        run: rm -rf $GITHUB_WORKSPACE/*
