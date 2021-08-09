@@ -8,11 +8,12 @@ jobs:
   test:  
     name: commands
     
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
-      - name: create file
-        run: touch $GITHUB_WORKSPACE/foo.txt
+    
+      - name: checkout
+        uses: actions/checkout@master
 
       - name: list files
         run: ls $GITHUB_WORKSPACE
