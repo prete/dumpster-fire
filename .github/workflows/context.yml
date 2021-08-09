@@ -6,17 +6,11 @@ on:
 jobs:
   context:
     runs-on: self-hosted
-    container:
-      image: docker:latest
-      
+
     steps:
 
       - name: Checkout
-        id: git
         uses: actions/checkout@v2
-        run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo "::set-output name=branch_name::$(git branch --show-current)"
 
       - name: Inspect context
         run: |
@@ -36,7 +30,7 @@ jobs:
           echo "github.sha:              ${{ github.sha }}"
 
       - name: Check short_sha
-        run: echo ${{ steps.git.outputs.sha_short }}
+        run: echo "$(git rev-parse --short HEAD)"
         
       - name: Check branch_name
-        run: echo ${{ steps.git.outputs.branch_name }}
+        run: echo "$(git branch --show-current)"
