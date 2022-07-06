@@ -11,5 +11,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Configure AWS credentials from Test account
         uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ""
       - name: smoke test
         run: aws --endpoint "${{ secrets.AWS_S3_ENDPOINT }}" s3 ls s3://mp33-test/meta/
