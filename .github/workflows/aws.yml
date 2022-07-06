@@ -10,4 +10,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: smoke test
-        run: aws --endpoint "${AWS_S3_ENDPOINT}" s3 ls s3://mp33-test/meta/
+        run: aws --endpoint "${{ secrets.AWS_S3_ENDPOINT }}" s3 ls s3://mp33-test/meta/
