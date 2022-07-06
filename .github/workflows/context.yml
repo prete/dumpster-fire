@@ -67,11 +67,35 @@ jobs:
           echo "${{ steps.git.outputs.branch_name }}"
 
       - name: Show on main
-        if: fromJSON( ${{ env.GITHUB_REF_NAME == 'main' }} )
+        if: ( ${{ env.GITHUB_REF_NAME == 'main' }} )
         run: echo "SHOWED=latest" >> $GITHUB_ENV
 
       - name: Show on this_is_a_branch
-        if: fromJSON( ${{ env.GITHUB_REF_NAME == 'this_is_a_branch' }} )
+        if: ( ${{ env.GITHUB_REF_NAME == 'this_is_a_branch' }} )
+        run: echo "SHOWED=this_is_a_branch" >> $GITHUB_ENV        
+        
+      - name: Show
+        run: echo "${SHOWED}  --  ${{env.SHOWED}}"
+
+
+      - name: Show on main
+        if: ${{ env.GITHUB_REF_NAME}} == 'main'
+        run: echo "SHOWED=latest" >> $GITHUB_ENV
+
+      - name: Show on this_is_a_branch
+        if: ${{ env.GITHUB_REF_NAME }} == 'this_is_a_branch'
+        run: echo "SHOWED=this_is_a_branch" >> $GITHUB_ENV        
+        
+      - name: Show
+        run: echo "${SHOWED}  --  ${{env.SHOWED}}"
+
+
+      - name: Show on main
+        if: fromJSON( ${{ env.GITHUB_REF_NAME }} ) == 'main'
+        run: echo "SHOWED=latest" >> $GITHUB_ENV
+
+      - name: Show on this_is_a_branch
+        if: fromJSON( ${{ env.GITHUB_REF_NAME }} ) == 'this_is_a_branch'
         run: echo "SHOWED=this_is_a_branch" >> $GITHUB_ENV        
         
       - name: Show
