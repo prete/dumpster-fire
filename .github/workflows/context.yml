@@ -69,11 +69,11 @@ jobs:
 
       - name: Show on main
         run: echo "SHOWED=latest" >> $GITHUB_ENV
-        if: ${{env.GITHUB_REF_NAME}} == "main"
+        if: env.GITHUB_REF_NAME == "main"
 
       - name: Show on this_is_a_branch
         run: echo "SHOWED=this_is_a_branch" >> $GITHUB_ENV
-        if: ${{env.GITHUB_REF_NAME}} == "this_is_a_branch"
+        if: env.GITHUB_REF_NAME == "this_is_a_branch"
         
       - name: Show
         run: echo "${SHOWED}  --  ${{env.SHOWED}}"
