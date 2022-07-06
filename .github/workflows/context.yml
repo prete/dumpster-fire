@@ -66,3 +66,14 @@ jobs:
       - name: Show branch name
         run: |   
           echo "${{ steps.git.outputs.branch_name }}"
+
+      - name: Show on main
+        run: echo "latest" >> $SHOWED
+        if: ${{env.GITHUB_REF_NAME}} == "main"
+
+      - name: Show on this_is_a_branch
+        run: echo "this_is_a_branch" >> $SHOWED
+        if: ${{env.GITHUB_REF_NAME}} == "this_is_a_branch"
+        
+      - name: Show
+        run: echo "${SHOWED}  --  ${{env.SHOWED}}"
