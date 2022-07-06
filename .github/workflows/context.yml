@@ -7,7 +7,7 @@ jobs:
 
   github_ctx_env:
   
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
 
