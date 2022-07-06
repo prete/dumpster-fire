@@ -60,19 +60,18 @@ jobs:
 
       - name: Extract branch name
         id: git
-        run: |
-          echo "##[set-output name=branch_name;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo '::set-output name=branch::${{env.GITHUB_REF_NAME}}'
 
       - name: Show branch name
         run: |   
-          echo "${{ steps.git.outputs.branch_name }}"
+          echo "${{ steps.git.outputs.branch }}"
 
       - name: Show on main
-        if: env.GITHUB_REF_NAME == 'main'
+        if: steps.git.outputs.branch_name == 'main'
         run: echo "SHOWED=latest" >> $GITHUB_ENV
 
       - name: Show on this_is_a_branch
-        if: env.GITHUB_REF_NAME == 'this_is_a_branch'
+        if: steps.git.outputs.branch == 'this_is_a_branch'
         run: echo "SHOWED=this_is_a_branch" >> $GITHUB_ENV        
         
       - name: Show
