@@ -66,12 +66,12 @@ jobs:
         run: |   
           echo "${{ steps.git.outputs.branch_name }}"
 
-      - name: Set deploy path
+      - name: 'Set deploy path'
         run: |
           if [[ "${GITHUB_REF_NAME}" == 'main' ]]; then
-              echo "DEPLOY_PATH=latest" >> "$GITHUB_ENV"
+              echo "DEPLOY_PATH=latest" >> $GITHUB_ENV
           else
-              echo "DEPLOY_PATH=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+              echo "DEPLOY_PATH=${GITHUB_REF_NAME}" >> $GITHUB_ENV
           fi
   
       - name: Show
