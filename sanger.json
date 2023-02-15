@@ -1,0 +1,17 @@
+{
+  "title": "Project Title",
+  "description": "Project description",
+  "type": "pipeline"
+  "pipeline": {
+    "wm_name":"nextflow",
+    "wm_version":">22"
+  }
+  "version": "1.0.0",
+  "status": "active",
+  "maintainer": "me@sanger.ac.uk",
+  "authors":[
+    "John Dow",
+    "Fyodor Dostoevsky",
+    "William Shakespeare"
+  ]
+}
